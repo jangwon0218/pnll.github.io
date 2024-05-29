@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ether 7주차</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-image: url('https://i.imgur.com/8QGFMDt.png');
+      background-size: cover;
+      background-position: left 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    img {
+      width: 20%;
+      height: auto;
+      position: absolute;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <img id="image1" src="https://i.imgur.com/8h1N62P.jpeg" alt="Ether">
+  <img id="image2" src="https://i.imgur.com/0vWJKDo.jpeg" alt="Ether">
+
+  <script>
+    const images = document.querySelectorAll('img');
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+
+    let velocities = [];
+    const initialSpeed = 1; // Define the initial speed for both x and y directions
+
+    // 초기 위치와 속도 설정
+    images.forEach((image, index) => {
+      image.style.left = `${Math.random() * (screenWidth - image.offsetWidth)}px`;
+      image.style.top = `${Math.random() * (screenHeight - image.offsetHeight)}px`;
+      const randomAngle = Math.random() * 2 * Math.PI; // Generate a random angle in radians
+      velocities[index] = {
+        x: Math.cos(randomAngle) * initialSpeed, // Calculate x velocity based on angle and speed
+        y: Math.sin(randomAngle) * initialSpeed  // Calculate y velocity based on angle and speed
+      };
+    });
+
+    function animateImages() {
+      images.forEach((image, index) => {
+        const imageTop = image.offsetTop;
+        const imageLeft = image.offsetLeft;
+        const imageWidth = image.offsetWidth;
+        const imageHeight = image.offsetHeight;
+
+        // 벽에 닿으면 방향만 바꾸고 속도 유지 (속도 증가 없음)
+        if (imageTop <= 0) {
+          velocities[index].y = -velocities[index].y;
+        } else if (imageTop + imageHeight >= screenHeight) {
+          velocities[index].y = -velocities[index].y;
+        }
+        if (imageLeft <= 0) {
+          velocities[index].x = -velocities[index].x;
+        } else if (imageLeft + imageWidth >= screenWidth) {
+          velocities[index].x = -velocities[index].x;
+        }
+
+        // 이미지 위치 업데이트
+        const newTop = imageTop + velocities[index].y;
+        const newLeft = imageLeft + velocities[index].x;
+
+        image.style.top = newTop + 'px';
+        image.style.left = newLeft + 'px';
+      });
+
+      requestAnimationFrame(animateImages);
+    }
+
+    animateImages();
+  </script>
+</body>
+</html>
